@@ -29,7 +29,7 @@ export const InputContainer = styled.div`
     padding: 1rem;
     width: 80%;
     border-radius: 25px;
-    background-color: #fcc2fc;
+    background-color: #cfc2fc;
   `};
 `;
 

@@ -1,6 +1,7 @@
 import { Button } from "@mui/material";
 import React, { useState } from "react";
 import * as Styled from "./Main.style";
+
 function Main() {
   const [inputData, setInputData] = useState("");
 
