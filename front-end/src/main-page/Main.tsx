@@ -1,21 +1,26 @@
 import { Button } from "@mui/material";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import * as Styled from "./Main.style";
 
 function Main() {
   const [inputData, setInputData] = useState("");
-
+  const navigate = useNavigate();
   return (
     <Styled.Container>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap"
-      />
       <Styled.Header>
-        <Button onClick={() => console.log("clicked")}>logout</Button>
+        <Button
+          onClick={() => {
+            navigate("/");
+            localStorage.clear();
+          }}
+        >
+          logout
+        </Button>
+        <Button>{localStorage.getItem("logedIN")}</Button>
       </Styled.Header>
       <Styled.InnerContainer>
-        <Styled.Title>Find your mmMeal ..!</Styled.Title>
+        <Styled.Title>Find your mmMeal...</Styled.Title>
         <Styled.InputContainer>
           <Styled.Label htmlFor="user-input-data">Enter data </Styled.Label>
           <Styled.CustomInput

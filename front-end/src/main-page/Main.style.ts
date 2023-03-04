@@ -12,6 +12,7 @@ export const Container = styled.div`
     background-color: #b5f1cc;
   `};
 `;
+
 export const InnerContainer = styled.div`
   ${() => css`
     display: flex;
@@ -58,6 +59,7 @@ export const Title = styled.div`
     margin-bottom: 3rem;
   `};
 `;
+
 export const Header = styled.div`
   ${() => css`
     font-family: "Indie Flower";

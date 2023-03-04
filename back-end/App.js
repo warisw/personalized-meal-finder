@@ -17,14 +17,15 @@ app.post("/", async (req, res) => {
   };
 
   try {
-    const checkIfExist = await collection.findOne({ email: email });
-
+    const checkIfExist = await collection.findOne(data);
+    console.log(checkIfExist);
     if (checkIfExist) {
       res.json("exists");
     } else {
       res.json("not exist");
     }
   } catch (e) {
+    console.log(e);
     res.json("not exist");
   }
 });
@@ -36,17 +37,20 @@ app.post("/signup", async (req, res) => {
     email: email,
     pass: pass,
   };
+
   console.log("signup");
   try {
     const checkIfExist = await collection.findOne({ email: email });
-
+    console.log("mpika");
     if (checkIfExist) {
       res.json("exists");
     } else {
       res.json("not exist");
       await collection.insertMany([data]);
+      console.log([data]);
     }
   } catch (e) {
+    console.log(e);
     res.json("not exist");
   }
 });
