@@ -19,7 +19,7 @@ export const InnerContainer = styled.div`
     flex-direction: column;
     border: 2px solid #cff2fc;
     border-radius: 25px;
-    padding: 4rem 6rem;
+    padding: 4rem 10rem;
     background-color: #cfc2fc;
     box-shadow: 5px 6px 7px #bfcfff;
   `};
@@ -66,7 +66,7 @@ export const Input = styled.input`
       margin-bottom: 0.5rem;
       border: 2px solid #cfc2fc;
       border-radius: 20px;
-      padding: 0.5rem 1rem;
+      padding: 0.5rem 2rem;
     `};
 `;
 
@@ -76,5 +76,6 @@ export const Submit = styled.input`
       padding: 0.5rem 1.5rem;
       border: 2px solid #cfc2fc;
       border-radius: 20px;
+      background-color: #aafdff;
     `};
 `;

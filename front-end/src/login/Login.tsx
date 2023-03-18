@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as Styled from "./Login.style";
 
@@ -33,6 +33,7 @@ export default function Login() {
       console.log(error);
     }
   }
+
   return (
     <Styled.Container>
       <Styled.TitleLabel>Meal Finder</Styled.TitleLabel>
@@ -48,7 +49,7 @@ export default function Login() {
           />
           <Styled.Input
             type="password"
-            placeholder="password"
+            placeholder="Password"
             onChange={(event) => setPass(event.target.value)}
             id="login-password"
           />

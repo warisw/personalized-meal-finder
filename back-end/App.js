@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 // app.use(express.unlencoded({ extended: true }));
 app.use(cors());
-console.log("as");
+
 app.get("/", cors(), (req, res) => {});
 
 app.post("/", async (req, res) => {
