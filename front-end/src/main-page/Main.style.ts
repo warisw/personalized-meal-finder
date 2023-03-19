@@ -38,6 +38,7 @@ export const Label = styled.div<LabelHTMLAttributes<HTMLLabelElement>>`
   ${() => css`
     padding: 1rem;
     font-size: 24px;
+    min-width: fit-content;
     font-family: "Indie Flower";
   `};
 `;

@@ -1,4 +1,3 @@
-import React from "react";
 import "./App.css";
 import Main from "./main-page/Main";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -25,7 +24,7 @@ function App() {
               </RequireAuth>
             }
           />
-          {/* <Route path="/home" element={<Main />} /> */}
+       
           <Route path="*" element={<Login />} />
         </Routes>
       </Router>
