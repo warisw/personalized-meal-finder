@@ -1,19 +1,107 @@
 import sys
 
+from transformers import AutoTokenizer, FlaxAutoModelForSeq2SeqLM
+
+
+MODEL_NAME_OR_PATH = "flax-community/t5-recipe-generation"
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME_OR_PATH, use_fast=True)
+model = FlaxAutoModelForSeq2SeqLM.from_pretrained(MODEL_NAME_OR_PATH)
+
+generation_kwargs = {
+    "max_length": 512,
+    "min_length": 64,
+    "no_repeat_ngram_size": 3,
+    "do_sample": True,
+    "top_k": 60,
+    "top_p": 0.95
+}
+prefix = "items: "
+special_tokens = tokenizer.all_special_tokens
+tokens_map = {
+    "<sep>": "--",
+    "<section>": "\n"
+}
+def generation_function(texts):
+    _inputs = texts if isinstance(texts, list) else [texts]
+    inputs = [prefix + inp for inp in _inputs]
+    inputs = tokenizer(
+        inputs, 
+        max_length=256, 
+        padding="max_length", 
+        truncation=True, 
+        return_tensors="jax"
+    )
+
+    input_ids = inputs.input_ids
+    attention_mask = inputs.attention_mask
+
+    output_ids = model.generate(
+        input_ids=input_ids, 
+        attention_mask=attention_mask,
+        **generation_kwargs
+    )
+    generated = output_ids.sequences
+    generated_recipe = target_postprocessing(
+        tokenizer.batch_decode(generated, skip_special_tokens=False),
+        special_tokens
+    )
+ 
+    return generated_recipe
+
+def skip_special_tokens(text, special_tokens):
+    for token in special_tokens:
+        text = text.replace(token, "")
+
+    return text
+
+def target_postprocessing(texts, special_tokens):
+    if not isinstance(texts, list):
+        texts = [texts]
+    
+    new_texts = []
+    for text in texts:
+        text = skip_special_tokens(text, special_tokens)
+
+        for k, v in tokens_map.items():
+            text = text.replace(k, v)
+
+        new_texts.append(text)
+ 
+    return new_texts
+
 def recommend_meal(processed_input):
-    # Load pre-trained ML model
-    print("Iam in Python",processed_input)
-    # model = load_model('path/to/your/pretrained/model.h5')
 
-    # # Make meal recommendation based on processed input
-    # meal = model.predict(processed_input)
 
+   
+    generated = generation_function(processed_input)
+    for text in generated:
+        sections = text.split("\n")
+        for section in sections:
+            section = section.strip()
+            if section.startswith("title:"):
+                section = section.replace("title:", "")
+                headline = "TITLE"
+            elif section.startswith("ingredients:"):
+                section = section.replace("ingredients:", "")
+                headline = "INGREDIENTS"
+            elif section.startswith("directions:"):
+                section = section.replace("directions:", "")
+                headline = "DIRECTIONS"
+            
+            if headline == "TITLE":
+                print(f"[{headline}]: {section.strip().capitalize()}")
+            else:
+                section_info = [f"  - {i+1}: {info.strip().capitalize()}" for i, info in enumerate(section.split("--"))]
+                print(f"[{headline}]:")
+                print("\n".join(section_info))
+
+      
     return 'meal'
 
 if __name__ == '__main__':
-    # Get processed input from command-line argument
-    processed_input = sys.argv[1]
+   
+    
+    processed_input = sys.argv[1] 
 
-    # Call recommend_meal function and print output
     recommend_meal(processed_input)
-    # print(meal)
+  

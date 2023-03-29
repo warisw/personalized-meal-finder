@@ -1,22 +1,38 @@
 const { spawn } = require("child_process");
 
 const recommendMeal = (processedInput) => {
-  console.log("I am in pythonToCall");
-  const pythonProcess = spawn("python", [
-    "./ModelProcessing.py",
-    processedInput,
-  ]);
+  return new Promise((resolve, reject) => {
+    const pythonProcess = spawn(
+      "python",
+      ["./ModelProcessing.py", processedInput],
+      {
+        env: {
+          PATH: process.env.PATH,
+          PYTHONPATH: process.env.PYTHONPATH,
+          PYTHONIOENCODING: "UTF-8",
+          PYTHONUNBUFFERED: "1",
+          PY_PYTHON: "python3",
+        },
+      }
+    );
 
-  pythonProcess.stdout.on("data", (data) => {
-    console.log(`Child process output: ${data}`);
-  });
+    let output = "";
 
-  pythonProcess.stderr.on("data", (data) => {
-    console.error(`Child process error: ${data}`);
-  });
+    pythonProcess.stdout.on("data", (data) => {
+      output += data.toString();
+    });
 
-  pythonProcess.on("exit", (code) => {
-    console.log(`Child process exited with code ${code}`);
+    pythonProcess.stderr.on("data", (data) => {
+      reject(data.toString());
+    });
+
+    pythonProcess.on("exit", (code) => {
+      if (code === 0) {
+        resolve(output);
+      } else {
+        reject(`Child process exited with code ${code}`);
+      }
+    });
   });
 };
 
