@@ -55,9 +55,9 @@ export default function Login() {
           />
           {isEmpty && (
             <Styled.Error>Email or Password cant be empty</Styled.Error>
-          )}{" "}
+          )}
           {isWrongIn && <Styled.Error>Wrong Email or Password</Styled.Error>}
-          <Styled.Submit type="submit" onClick={handleSubmit} />
+          <Styled.Submit type="submit" onClick={handleSubmit} tabIndex={0} />
         </Styled.Form>
 
         <p>

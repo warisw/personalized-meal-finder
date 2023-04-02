@@ -4,6 +4,7 @@ const recommendMeal = require("./PythonCall");
 const cors = require("cors");
 const { collection } = require("./mongoDB/mongoModel");
 const app = express();
+
 app.use(express.json());
 // app.use(express.unlencoded({ extended: true }));
 app.use(cors());
@@ -32,10 +33,17 @@ app.post("/", async (req, res) => {
 
 app.post("/home", async (req, res) => {
   const { inputData } = req.body;
-  console.log("mhm");
-  const mealRespond = await recommendMeal(inputData);
-  console.log("AAAAA", mealRespond);
-  res.send(mealRespond);
+  console.log("calling Recommended Meal");
+
+  recommendMeal(inputData)
+    .then((mealRespond) => {
+      console.log("Generated recipe:", mealRespond);
+
+      res.send(mealRespond);
+    })
+    .catch((error) => {
+      console.error("An error occurred:", error);
+    });
 });
 
 app.post("/signup", async (req, res) => {

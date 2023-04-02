@@ -55,7 +55,11 @@ function Main() {
           <Button onClick={handleSubmit}>search</Button>
         </Styled.InputContainer>
         {isLoading ? (
-          <CircularProgress size={24} />
+          <>
+            <Styled.Label>Searching the best recipe for you!!</Styled.Label>
+
+            <CircularProgress size={24} />
+          </>
         ) : (
           meals && (
             <Styled.MealContainer>

@@ -1,20 +1,25 @@
 import sys
-
+import random  
+import numpy as np 
 from transformers import AutoTokenizer, FlaxAutoModelForSeq2SeqLM
 
 
-MODEL_NAME_OR_PATH = "flax-community/t5-recipe-generation"
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME_OR_PATH, use_fast=True)
-model = FlaxAutoModelForSeq2SeqLM.from_pretrained(MODEL_NAME_OR_PATH)
+modelName = "../model"
+tokenizer = AutoTokenizer.from_pretrained(modelName, use_fast=True)
+model = FlaxAutoModelForSeq2SeqLM.from_pretrained(modelName)
 
 generation_kwargs = {
-    "max_length": 512,
+    # The maximum length (in tokens) of the generated text.
+    "max_length": 2000,
     "min_length": 64,
-    "no_repeat_ngram_size": 3,
+    # The size of n-grams that should not be repeated in the generated text.
+    "no_repeat_ngram_size": 6,
     "do_sample": True,
-    "top_k": 60,
-    "top_p": 0.95
+    "top_k": 50,
+    "top_p": 0.9,
+    "temperature": random.uniform(0.4, 2.8),  
 }
+
 prefix = "items: "
 special_tokens = tokenizer.all_special_tokens
 tokens_map = {
@@ -45,7 +50,7 @@ def generation_function(texts):
         tokenizer.batch_decode(generated, skip_special_tokens=False),
         special_tokens
     )
- 
+    
     return generated_recipe
 
 def skip_special_tokens(text, special_tokens):
@@ -70,9 +75,7 @@ def target_postprocessing(texts, special_tokens):
     return new_texts
 
 def recommend_meal(processed_input):
-
-
-   
+    np.random.seed(random.randint(0, 1000000))
     generated = generation_function(processed_input)
     for text in generated:
         sections = text.split("\n")
@@ -89,14 +92,13 @@ def recommend_meal(processed_input):
                 headline = "DIRECTIONS"
             
             if headline == "TITLE":
-                print(f"[{headline}]: {section.strip().capitalize()}")
+                print(f"{headline}: {section.strip().capitalize()}")
             else:
                 section_info = [f"  - {i+1}: {info.strip().capitalize()}" for i, info in enumerate(section.split("--"))]
-                print(f"[{headline}]:")
+                print(f"{headline}:")
                 print("\n".join(section_info))
 
       
-    return 'meal'
 
 if __name__ == '__main__':
    

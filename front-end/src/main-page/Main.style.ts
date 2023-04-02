@@ -114,6 +114,7 @@ export const MealContainer = styled.div`
     width: 80%;
     padding: 0.4rem;
     margin-top: 1rem;
+    margin-bottom: 3rem;
     border-radius: 25px;
     background-color: #cfc2fc;
   `};
