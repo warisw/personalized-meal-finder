@@ -4,4 +4,10 @@
 body {
   overscroll-behavior: none;
   background-color: #b5f1cc;
+  background-image: url("./food.jpg");
+
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  backdrop-filter: blur(3px);
 }

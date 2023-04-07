@@ -5,10 +5,24 @@ const cors = require("cors");
 const { collection } = require("./mongoDB/mongoModel");
 const app = express();
 
+function parseRecipeText(recipeText) {
+  const titleRegex = /title:\s*(.+)/i;
+  const titleMatch = recipeText.match(titleRegex);
+
+  let title = "";
+  if (titleMatch) {
+    title = titleMatch[1].trim();
+  }
+
+  return {
+    title,
+    full_text: recipeText,
+  };
+}
+
 app.use(express.json());
 // app.use(express.unlencoded({ extended: true }));
 app.use(cors());
-app.get("/", cors(), (req, res) => {});
 
 app.post("/", async (req, res) => {
   const { email, pass } = req.body;
@@ -32,18 +46,50 @@ app.post("/", async (req, res) => {
 });
 
 app.post("/home", async (req, res) => {
-  const { inputData } = req.body;
+  const { email, inputData } = req.body;
   console.log("calling Recommended Meal");
 
   recommendMeal(inputData)
-    .then((mealRespond) => {
-      console.log("Generated recipe:", mealRespond);
+    .then(async (recipeText) => {
+      console.log("Generated recipe:", recipeText);
 
-      res.send(mealRespond);
+      const parsedRecipe = parseRecipeText(recipeText);
+
+      try {
+        await collection.updateOne(
+          { email },
+          { $push: { mealRecommendations: parsedRecipe } }
+        );
+      } catch (error) {
+        console.error("An error occurred while updating the user:", error);
+      }
+
+      res.send(parsedRecipe);
     })
     .catch((error) => {
       console.error("An error occurred:", error);
     });
+});
+
+app.get("/history", async (req, res) => {
+  const { email } = req.query;
+  try {
+    const user = await collection.findOne({ email });
+    if (user) {
+      res.json(user.mealRecommendations);
+    } else {
+      res.json([]);
+    }
+  } catch (error) {
+    console.log(error);
+    res.json([]);
+  }
+});
+
+app.post("/specialFilters", async (req, res) => {
+  const { addInputData } = req.body;
+  console.log(addInputData);
+  //add here condition if
 });
 
 app.post("/signup", async (req, res) => {

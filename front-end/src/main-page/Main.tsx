@@ -1,32 +1,72 @@
 import { Button, CircularProgress } from "@mui/material";
 import axios from "axios";
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Styled from "./Main.style";
 
+interface Recipe {
+  title: string;
+  full_text: string;
+}
+
 function Main() {
   const [inputData, setInputData] = useState("");
-  const [meals, setMeals] = useState("");
+  const [addInputData, setAddInputData] = useState("");
+  const [meals, setMeals] = useState({ title: "", full_text: "" });
+  const [isEmpty, setIsEmpty] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [recipeHistory, setRecipeHistory] = useState<Recipe[]>([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchRecipeHistory();
+  }, [isLoading]);
+
+  async function fetchRecipeHistory() {
+    try {
+      const response = await axios.get("http://localhost:8000/history", {
+        params: {
+          email: localStorage.getItem("logedIN"),
+        },
+      });
+      const history = response.data;
+      setRecipeHistory(history);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function handleSubmit(event: SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
+    console.log(inputData);
+    const finalData = inputData + "," + addInputData;
+    console.log(finalData);
 
     try {
       const response = await axios.post("http://localhost:8000/home", {
-        inputData,
+        email: localStorage.getItem("logedIN"),
+        inputData: finalData,
+        addInputData,
       });
       const meals = response.data;
 
       setMeals(meals);
-      console.log("REACT", meals);
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      addInputData &&
+        axios.post("http://localhost:8000/specialFilters", {
+          addInputData,
+        });
     } catch (error) {
       console.log(error);
     }
     setIsLoading(false);
   }
+
   return (
     <Styled.Container>
       <Styled.Header>
@@ -40,19 +80,60 @@ function Main() {
         </Button>
         <Button>{localStorage.getItem("logedIN")}</Button>
       </Styled.Header>
+
+      <Styled.RecipeHistoryDropdown
+        onChange={(event) => {
+          const selectedRecipe = recipeHistory.find(
+            (recipe) => recipe.title === event.target.value
+          );
+          if (selectedRecipe) {
+            setMeals(selectedRecipe);
+          }
+        }}
+      >
+        <option value="">Select a recipe from history</option>
+        {recipeHistory.map((recipe, index) => (
+          <option key={index} value={recipe.title}>
+            {recipe.title}
+          </option>
+        ))}
+      </Styled.RecipeHistoryDropdown>
+
       <Styled.InnerContainer>
         <Styled.Title>Find your mmMeal...</Styled.Title>
         <Styled.InputContainer>
-          <Styled.Label htmlFor="user-input-data">
-            What would you like?
-          </Styled.Label>
-          <Styled.CustomInput
-            type="text"
-            placeholder="tomato, 3 potatos, onions, greek"
-            name="user-input-data"
-            onChange={(event) => setInputData(event?.target.value)}
-          />
-          <Button onClick={handleSubmit}>search</Button>
+          <Styled.InputInnerCont>
+            <Styled.Label htmlFor="user-input-data">
+              Add your ingredients
+            </Styled.Label>
+            <Styled.CustomInput
+              type="text"
+              placeholder="tomato, 3 potatos, onions, greek"
+              name="user-input-data"
+              error={isEmpty}
+              onChange={(event) => {
+                setInputData(event?.target.value);
+                inputData.length > 1 ? setIsEmpty(false) : setIsEmpty(true);
+              }}
+            />
+          </Styled.InputInnerCont>
+          <Styled.InputInnerCont>
+            <Styled.Label htmlFor="special-input">
+              Any additional filters?
+            </Styled.Label>
+            <Styled.CustomInput
+              type="text"
+              placeholder="low calories, gluten free"
+              name="special-input"
+              onChange={(event) => setAddInputData(event?.target.value)}
+            />
+          </Styled.InputInnerCont>
+          <Styled.SubmitButton
+            disabled={isEmpty}
+            onClick={(event) => !isEmpty && handleSubmit(event)}
+          >
+            search
+          </Styled.SubmitButton>
         </Styled.InputContainer>
         {isLoading ? (
           <>
@@ -61,11 +142,11 @@ function Main() {
             <CircularProgress size={24} />
           </>
         ) : (
-          meals && (
+          meals.full_text && (
             <Styled.MealContainer>
               <Styled.MealTitle>Meal Details:</Styled.MealTitle>
               <Styled.MealDetails>
-                {meals.split("\n").map((line, index) => (
+                {meals.full_text.split("\n").map((line, index) => (
                   <p key={index}>{line}</p>
                 ))}
               </Styled.MealDetails>

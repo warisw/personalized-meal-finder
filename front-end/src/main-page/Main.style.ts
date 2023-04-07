@@ -1,6 +1,6 @@
 import { LabelHTMLAttributes } from "react";
 import styled, { css } from "styled-components";
-import { Input } from "@mui/material";
+import { Button, Input } from "@mui/material";
 
 export const Container = styled.div`
   ${() => css`
@@ -8,8 +8,6 @@ export const Container = styled.div`
     justify-content: center;
     align-items: center;
     flex-direction: column;
-
-    background-color: #b5f1cc;
   `};
 `;
 
@@ -19,25 +17,33 @@ export const InnerContainer = styled.div`
     width: 100%;
     align-items: center;
     flex-direction: column;
+    min-width: fit-content;
   `};
 `;
 
 export const InputContainer = styled.div`
   ${() => css`
     display: flex;
+    flex-direction: column;
     justify-content: flex-start;
-
+    min-width: fit-content;
     padding: 1rem;
     width: 80%;
     border-radius: 25px;
-    background-color: #cfc2fc;
+    background-color: rgb(207, 194, 252, 0.8);
     margin-bottom: 5rem;
+  `};
+`;
+export const InputInnerCont = styled.div`
+  ${() => css`
+    display: flex;
+    flex-direction: row;
   `};
 `;
 
 export const Label = styled.div<LabelHTMLAttributes<HTMLLabelElement>>`
   ${() => css`
-    padding: 1rem;
+    padding: 1rem 0.5rem;
     font-size: 24px;
     min-width: fit-content;
     font-family: "Indie Flower";
@@ -65,45 +71,14 @@ export const Title = styled.div`
 
 export const Header = styled.div`
   ${() => css`
-    position: sticky;
+    position: fixed;
     font-family: "Indie Flower";
     font-size: 3rem;
-    background-color: #e5fdd1;
+    background-color: rgba(229, 253, 209, 0.6);
     width: 100%;
     z-index: 11;
     top: 0;
   `};
-`;
-
-export const MealOutput = styled.div`
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #f5f5f5;
-  border-radius: 5px;
-
-  p {
-    margin: 0;
-    line-height: 1.5;
-  }
-
-  h4 {
-    margin-top: 20px;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
-
-  ul {
-    margin-top: 0;
-    margin-bottom: 20px;
-    list-style-type: none;
-    padding: 0;
-  }
-
-  li {
-    margin-bottom: 5px;
-    font-size: 14px;
-    line-height: 1.5;
-  }
 `;
 
 export const MealContainer = styled.div`
@@ -116,7 +91,7 @@ export const MealContainer = styled.div`
     margin-top: 1rem;
     margin-bottom: 3rem;
     border-radius: 25px;
-    background-color: #cfc2fc;
+    background-color: rgb(207, 194, 252, 0.8);
   `};
 `;
 
@@ -125,6 +100,12 @@ export const MealTitle = styled.div`
     font-family: "Indie Flower";
     font-size: 2rem;
     margin-bottom: 1rem;
+  `};
+`;
+type ButtonTypes = { disabled?: boolean };
+export const SubmitButton = styled(Button)<ButtonTypes>`
+  ${(disabled) => css`
+    ${disabled && "color:red;"}
   `};
 `;
 
@@ -137,5 +118,23 @@ export const MealDetails = styled.div`
     font-size: 1.2rem;
     line-height: 1.5;
     margin-bottom: 1rem;
+  `};
+`;
+
+export const RecipeHistoryDropdown = styled.select`
+  ${() => css`
+    position: relative;
+    top: 70px;
+    left: -35%;
+    padding: 0.5rem 0.7rem;
+    font-size: 16px;
+    font-family: "Lato";
+    font-style: italic;
+    background-color: rgb(207, 194, 252, 0.8);
+    width: 20%;
+    margin-bottom: 1rem;
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+    border-top: none;
   `};
 `;
