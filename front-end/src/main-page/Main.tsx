@@ -1,4 +1,4 @@
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, Menu, MenuItem } from "@mui/material";
 import axios from "axios";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -39,9 +39,8 @@ function Main() {
   async function handleSubmit(event: SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
-    console.log(inputData);
+
     const finalData = inputData + "," + addInputData;
-    console.log(finalData);
 
     try {
       const response = await axios.post("http://localhost:8000/home", {
@@ -60,12 +59,37 @@ function Main() {
       addInputData &&
         axios.post("http://localhost:8000/specialFilters", {
           addInputData,
+          email: localStorage.getItem("logedIN"),
         });
     } catch (error) {
       console.log(error);
     }
     setIsLoading(false);
   }
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleSettingsClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDeleteHistory = async () => {
+    axios.post("http://localhost:8000/deleteHistory", {
+      email: localStorage.getItem("logedIN"),
+    });
+    handleMenuClose();
+  };
+
+  const handleDeleteSpecialFilters = () => {
+    axios.post("http://localhost:8000/deleteFilters", {
+      email: localStorage.getItem("logedIN"),
+    });
+    handleMenuClose();
+  };
 
   return (
     <Styled.Container>
@@ -98,6 +122,19 @@ function Main() {
           </option>
         ))}
       </Styled.RecipeHistoryDropdown>
+      <Styled.SettingsContainer>
+        <Button onClick={handleSettingsClick}>Settings</Button>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+        >
+          <MenuItem onClick={handleDeleteHistory}>Delete History</MenuItem>
+          <MenuItem onClick={handleDeleteSpecialFilters}>
+            Delete Special Filters
+          </MenuItem>
+        </Menu>
+      </Styled.SettingsContainer>
 
       <Styled.InnerContainer>
         <Styled.Title>Find your mmMeal...</Styled.Title>

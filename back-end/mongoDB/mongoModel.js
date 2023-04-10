@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const recipeSchema = new mongoose.Schema({
+const recipeSchema = new Schema({
   title: String,
   full_text: String,
 });
@@ -21,6 +21,7 @@ const userSchema = new Schema(
   {
     email: { type: String, required: true },
     password: { type: String, required: true },
+    specialFilters: { type: [String], default: [] },
     mealRecommendations: [recipeSchema],
   },
   { timestamps: true }

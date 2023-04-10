@@ -47,18 +47,15 @@ app.post("/", async (req, res) => {
 
 app.post("/home", async (req, res) => {
   const { email, inputData } = req.body;
-  console.log("calling Recommended Meal");
 
   recommendMeal(inputData)
     .then(async (recipeText) => {
-      console.log("Generated recipe:", recipeText);
-
       const parsedRecipe = parseRecipeText(recipeText);
 
       try {
         await collection.updateOne(
           { email },
-          { $push: { mealRecommendations: parsedRecipe } }
+          { $addToSet: { mealRecommendations: parsedRecipe } }
         );
       } catch (error) {
         console.error("An error occurred while updating the user:", error);
@@ -87,9 +84,48 @@ app.get("/history", async (req, res) => {
 });
 
 app.post("/specialFilters", async (req, res) => {
-  const { addInputData } = req.body;
-  console.log(addInputData);
-  //add here condition if
+  const { addInputData, email } = req.body;
+
+  try {
+    await collection.updateOne(
+      { email },
+      { $addToSet: { specialFilters: addInputData } }
+    );
+
+    const user = await collection.findOne({ email });
+
+    if (user) {
+      res.json(user.specialFilters);
+    } else {
+      res.json([]);
+    }
+  } catch (error) {
+    console.log(error);
+    res.json([]);
+  }
+});
+app.post("/deleteHistory", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    await collection.updateOne(
+      { email },
+      { $set: { mealRecommendations: [] } }
+    );
+    console.log("Meal recommendations history deleted successfully.");
+  } catch (error) {
+    console.error("Error deleting history:", error);
+  }
+});
+app.post("/deleteFilters", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    await collection.updateOne({ email }, { $set: { specialFilters: [] } });
+    console.log("Meal recommendations history deleted successfully.");
+  } catch (error) {
+    console.error("Error deleting history:", error);
+  }
 });
 
 app.post("/signup", async (req, res) => {
@@ -107,7 +143,6 @@ app.post("/signup", async (req, res) => {
     } else {
       res.json("not exist");
       await collection.insertMany([data]);
-      console.log([data]);
     }
   } catch (e) {
     console.log(e);

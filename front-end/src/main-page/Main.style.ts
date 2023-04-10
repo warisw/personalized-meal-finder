@@ -68,6 +68,14 @@ export const Title = styled.div`
     margin-bottom: 3rem;
   `};
 `;
+export const SettingsContainer = styled.div`
+  ${() => css`
+    position: relative;
+    z-index: 1;
+    top: -35px;
+    right: -40%;
+  `};
+`;
 
 export const Header = styled.div`
   ${() => css`
@@ -76,7 +84,7 @@ export const Header = styled.div`
     font-size: 3rem;
     background-color: rgba(229, 253, 209, 0.6);
     width: 100%;
-    z-index: 11;
+    z-index: 1;
     top: 0;
   `};
 `;
@@ -102,6 +110,7 @@ export const MealTitle = styled.div`
     margin-bottom: 1rem;
   `};
 `;
+
 type ButtonTypes = { disabled?: boolean };
 export const SubmitButton = styled(Button)<ButtonTypes>`
   ${(disabled) => css`
