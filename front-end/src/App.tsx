@@ -1,9 +1,9 @@
 import "./App.css";
-import Main from "./main-page/Main";
+import Main from "./MainPage/Main";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./login/Login";
-import Signup from "./signup/Signup";
-import RequireAuth from "./main-page/RequireAuth";
+import Login from "./Login/Login";
+import Signup from "./Signup/Signup";
+import RequireAuth from "./MainPage/RequireAuth";
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
               </RequireAuth>
             }
           />
-       
+
           <Route path="*" element={<Login />} />
         </Routes>
       </Router>

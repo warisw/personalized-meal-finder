@@ -40,13 +40,10 @@ function Main() {
     event.preventDefault();
     setIsLoading(true);
 
-    const finalData = inputData + "," + addInputData;
-
     try {
       const response = await axios.post("http://localhost:8000/home", {
         email: localStorage.getItem("logedIN"),
-        inputData: finalData,
-        addInputData,
+        inputData: inputData,
       });
       const meals = response.data;
 

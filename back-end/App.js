@@ -47,8 +47,25 @@ app.post("/", async (req, res) => {
 
 app.post("/home", async (req, res) => {
   const { email, inputData } = req.body;
+  let finalInput = inputData;
+  try {
+    const user = await collection.findOne({ email });
+    if (user) {
+      const finalInputArray = Array.from(new Set(finalInput.split(", ")));
+      const specialFiltersArray = Array.from(new Set(user.specialFilters));
+      const combinedArray = [...finalInputArray, ...specialFiltersArray];
+      const uniqueValuesArray = Array.from(new Set(combinedArray));
+      finalInput = uniqueValuesArray.join(", ");
+      console.log(finalInput);
+    } else {
+      res.json([]);
+    }
+  } catch (error) {
+    console.log(error);
+    res.json([]);
+  }
 
-  recommendMeal(inputData)
+  recommendMeal(finalInput)
     .then(async (recipeText) => {
       const parsedRecipe = parseRecipeText(recipeText);
 

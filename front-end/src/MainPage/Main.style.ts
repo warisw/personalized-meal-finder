@@ -66,8 +66,10 @@ export const Title = styled.div`
     font-family: "Indie Flower";
     font-size: 3rem;
     margin-bottom: 3rem;
+    color: rgba(229, 253, 209, 1);
   `};
 `;
+
 export const SettingsContainer = styled.div`
   ${() => css`
     position: relative;

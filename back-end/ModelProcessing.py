@@ -17,7 +17,7 @@ generation_kwargs = {
     "do_sample": True,
     "top_k": 50,
     "top_p": 0.9,
-    "temperature": random.uniform(0.4, 2.8),  
+    "temperature": 1,  
 }
 
 prefix = "items: "
