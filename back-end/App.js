@@ -21,10 +21,10 @@ function parseRecipeText(recipeText) {
 }
 
 app.use(express.json());
-// app.use(express.unlencoded({ extended: true }));
+
 app.use(cors());
 
-app.post("/", async (req, res) => {
+app.post("/login", async (req, res) => {
   const { email, pass } = req.body;
   const data = {
     email: email,
@@ -38,6 +38,28 @@ app.post("/", async (req, res) => {
       res.json("exists");
     } else {
       res.json("not exist");
+    }
+  } catch (e) {
+    console.log(e);
+    res.json("not exist");
+  }
+});
+
+app.post("/signup", async (req, res) => {
+  const { email, pass } = req.body;
+
+  const data = {
+    email: email,
+    pass: pass,
+  };
+
+  try {
+    const checkIfExist = await collection.findOne({ email: email });
+    if (checkIfExist) {
+      res.json("exists");
+    } else {
+      res.json("not exist");
+      await collection.insertMany([data]);
     }
   } catch (e) {
     console.log(e);
@@ -121,6 +143,7 @@ app.post("/specialFilters", async (req, res) => {
     res.json([]);
   }
 });
+
 app.post("/deleteHistory", async (req, res) => {
   const { email } = req.body;
 
@@ -134,6 +157,7 @@ app.post("/deleteHistory", async (req, res) => {
     console.error("Error deleting history:", error);
   }
 });
+
 app.post("/deleteFilters", async (req, res) => {
   const { email } = req.body;
 
@@ -142,28 +166,6 @@ app.post("/deleteFilters", async (req, res) => {
     console.log("Meal recommendations history deleted successfully.");
   } catch (error) {
     console.error("Error deleting history:", error);
-  }
-});
-
-app.post("/signup", async (req, res) => {
-  const { email, pass } = req.body;
-
-  const data = {
-    email: email,
-    pass: pass,
-  };
-
-  try {
-    const checkIfExist = await collection.findOne({ email: email });
-    if (checkIfExist) {
-      res.json("exists");
-    } else {
-      res.json("not exist");
-      await collection.insertMany([data]);
-    }
-  } catch (e) {
-    console.log(e);
-    res.json("not exist");
   }
 });
 

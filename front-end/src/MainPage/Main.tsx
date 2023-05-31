@@ -93,7 +93,7 @@ function Main() {
       <Styled.Header>
         <Button
           onClick={() => {
-            navigate("/");
+            navigate("/login");
             localStorage.clear();
           }}
         >
