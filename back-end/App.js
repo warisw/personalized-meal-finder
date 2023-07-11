@@ -1,6 +1,6 @@
 const express = require("express");
 const recommendMeal = require("./PythonCall");
-// const collection = require("./mongoDB/mongoModel");
+
 const cors = require("cors");
 const { collection } = require("./mongoDB/mongoModel");
 const app = express();

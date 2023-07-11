@@ -1,13 +1,17 @@
 import styled, { css } from "styled-components";
 import { FormHTMLAttributes } from "react";
+
 export const Container = styled.div`
   ${() => css`
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-color: #b5f1cc;
     height: 100vh;
+    background-image: url(${require("../images/foodLogin.jpg")});
+
+    background-repeat: no-repeat;
+    background-size: cover;
   `};
 `;
 
@@ -40,8 +44,14 @@ export const TitleLabel = styled.div`
     font-size: 3rem;
 
     position: absolute;
+    height: 5.5rem;
+    background-image: url(${require("../images/sandw.png")});
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 70px;
+    padding: 10px 20px;
     top: 10px;
-    left: 10px;
+    left: 50px;
   `};
 `;
 

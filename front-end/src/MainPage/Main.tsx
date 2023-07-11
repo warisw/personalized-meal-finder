@@ -113,7 +113,7 @@ function Main() {
         }}
       >
         <option value="">Select a recipe from history</option>
-        {recipeHistory.map((recipe, index) => (
+        {recipeHistory?.map((recipe, index) => (
           <option key={index} value={recipe.title}>
             {recipe.title}
           </option>

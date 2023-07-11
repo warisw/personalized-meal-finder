@@ -4,7 +4,7 @@
 body {
   overscroll-behavior: none;
   background-color: #b5f1cc;
-  background-image: url("../images/food.jpg");
+  background-image: url("./images/food.jpg");
 
   background-repeat: no-repeat;
   background-size: cover;

@@ -1,6 +1,4 @@
 import sys
-import random  
-import numpy as np 
 from transformers import AutoTokenizer, FlaxAutoModelForSeq2SeqLM
 
 
@@ -26,6 +24,7 @@ tokens_map = {
     "<sep>": "--",
     "<section>": "\n"
 }
+
 def generation_function(texts):
     _inputs = texts if isinstance(texts, list) else [texts]
     inputs = [prefix + inp for inp in _inputs]
@@ -75,7 +74,7 @@ def target_postprocessing(texts, special_tokens):
     return new_texts
 
 def recommend_meal(processed_input):
-    np.random.seed(random.randint(0, 1000000))
+
     generated = generation_function(processed_input)
     for text in generated:
         sections = text.split("\n")
