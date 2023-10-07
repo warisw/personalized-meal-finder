@@ -20,6 +20,13 @@ export const InnerContainer = styled.div`
     min-width: fit-content;
   `};
 `;
+export const Loader = styled.div`
+  ${() => css`
+    background-color: rgb(207, 194, 252, 0.8);
+    border-radius: 24px;
+    padding: 1.5rem;
+  `};
+`;
 
 export const InputContainer = styled.div`
   ${() => css`

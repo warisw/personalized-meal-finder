@@ -171,9 +171,11 @@ function Main() {
         </Styled.InputContainer>
         {isLoading ? (
           <>
-            <Styled.Label>Searching the best recipe for you!!</Styled.Label>
+            <Styled.Loader>
+              <Styled.Label>Searching the best recipe for you!!</Styled.Label>
 
-            <CircularProgress size={24} />
+              <CircularProgress size={30} thickness={6} />
+            </Styled.Loader>
           </>
         ) : (
           meals.full_text && (
